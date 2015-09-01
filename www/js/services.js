@@ -1,7 +1,7 @@
 angular.module('starter.services', [])
 
   .factory('Persistence', function ($q) {
-    //persistence.store.memory.config(persistence);  
+    //persistence.store.memory.config(persistence);
 
     persistence.store.cordovasql.config(persistence, 'app_db', '0.0.1', 'Database description', 5 * 1024 * 1024, 0);
 
