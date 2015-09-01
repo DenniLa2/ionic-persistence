@@ -27,7 +27,13 @@ angular.module('starter.services', [])
         });
       },
       remove: function (playlist) {
-        persistence.remove(playlist).flush();
+        var deferred = $q.defer();
+        
+        persistence.remove(playlist).flush(function () {
+          deferred.resolve({state: 'ok'});
+        });
+
+        return deferred.promise;
       },
       getPlaylists: function (from, to) {
         var defer = $q.defer();

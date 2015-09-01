@@ -67,17 +67,24 @@ angular.module('starter.controllers', [])
     };
   })
 
-  .controller('PlaylistsCtrl', function ($scope, $ionicModal, Persistence) {
-    $scope.ctrls = {delete: false, reorder: false};
+  // ! >>  Play List Controller >>----------------------------->
+
+  .controller('PlaylistsCtrl', function ($scope, $ionicModal, Persistence, $q) {
+    $scope.ctrls = {del: false, reorder: false};
     $scope.playlists = [];
 
     var getPlaylists = function () {
+      var deferred = $q.defer();
+      
       Persistence.getAllPlaylists().then(function (response) {
         $scope.playlists.length = 0;
         for (var i = 0; i < response.length; i++) {
           $scope.playlists.push(response[i]);
         }
+        deferred.resolve({state: 'ok'});
       });
+
+      return deferred.promise;
     };
 
     getPlaylists();
@@ -139,9 +146,23 @@ angular.module('starter.controllers', [])
     };
     /** << edit playlist << */
 
+    var reorderPlaylist = function () {
+      for (var i = 0; i < $scope.playlists.length; i++) {
+        console.log('i = ' + i);
+        $scope.playlists[i].order = i;
+      }
+      Persistence.flush();
+    };
+
     $scope.deletePlayList = function (playlist) {
-      Persistence.remove(playlist);
-      getPlaylists();
+      Persistence.remove(playlist)
+        .then(function (data) {
+          return getPlaylists();
+        })
+        .then(function (data) {
+          reorderPlaylist();
+        })
+      ;
     };
 
     $scope.$on('playlistAdded', function (event, playlist) {

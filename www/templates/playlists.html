@@ -1,28 +1,28 @@
 <ion-view title="Playlists">
   <ion-nav-buttons side="left">
-    <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+    <button menu-toggle="left" class="button button-icon icon ion-navicon" ng-click="ctrls.reorder = false; ctrls.del = false"></button>
   </ion-nav-buttons>
 
   <ion-header-bar class="bar-positive bar-subheader">
-      <button class="button button-icon icon ion-ios7-minus-outline"
-              ng-click="ctrls.delete = !ctrls.delete; ctrls.reorder = false"></button>
-      <button class="button button-icon icon ion-navicon-round"
-              ng-click="ctrls.reorder = !ctrls.reorder; ctrls.delete = false"></button>
+      <button class="button button-icon icon ion-ios-minus-outline"
+              ng-click="ctrls.del = !ctrls.del; ctrls.reorder = false"></button>
+      <button class="button button-icon icon ion-android-funnel"
+              ng-click="ctrls.reorder = !ctrls.reorder; ctrls.del = false"></button>
   </ion-header-bar>
 
   <ion-content class="has-header has-subheader">
-    <ion-list show-delete="ctrls.delete" show-reorder="ctrls.reorder">
+    <ion-list show-delete="ctrls.del" show-reorder="ctrls.reorder">
       <ion-item ng-repeat="playlist in playlists | orderBy:'order'"
                 item="playlist"
                 href="#/app/playlists/{{playlist.id}}">
         {{playlist.title}} ({{ playlist.order }})
-        <ion-delete-button class="ion-minus"
+        <ion-delete-button class="ion-minus-circled"
                            ng-click="deletePlayList(playlist)">
         </ion-delete-button>
         <ion-option-button class="ion-edit button-positive"
                            ng-click="editPlayList(playlist)">
         </ion-option-button>
-        <ion-reorder-button class="ion-navicon"
+        <ion-reorder-button class="ion-android-menu"
                             on-reorder="movePlayList(playlist, $fromIndex, $toIndex)">
         </ion-reorder-button>
       </ion-item>
