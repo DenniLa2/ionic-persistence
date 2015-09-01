@@ -1,0 +1,25 @@
+<div class="modal">
+  <ion-header-bar>
+    <h1 class="title">Edit Playlist</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeEditDialog()">Close</button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+    <form ng-submit="doEditDialog()">
+      <div class="list">
+        <label class="item item-input">
+          <span class="input-label">Playlist Name</span>
+          <input type="text" ng-model="playlist.title">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Playlist Order</span>
+          <input type="text" ng-model="playlist.order">
+        </label>
+        <label class="item">
+          <button class="button button-block button-positive" type="submit">OK</button>
+        </label>
+      </div>
+    </form>
+  </ion-content>
+</div>
