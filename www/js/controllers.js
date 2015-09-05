@@ -32,8 +32,11 @@ angular.module('starter.controllers', [])
       }, 1000);
     };
 
-    // Playlist dialog part
+  })
 
+  // ! >> Add playlist Controller >>----------------------------->
+  .controller('AddPlayListCtrl', function ($scope, $rootScope, $ionicModal, Persistence) {
+    // Playlist dialog part
     // Form data for the add playlist modal
     $scope.playlistData = {};
 
@@ -58,24 +61,32 @@ angular.module('starter.controllers', [])
     $scope.doAddDialog = function () {
 
       var playlist = new Persistence.Entities.Playlist({title: $scope.playlistData.title});
-      console.log('title: ' + $scope.playlistData.title);
-      Persistence.add(playlist);
-      $scope.$broadcast('playlistAdded', playlist);
+      Persistence.add(playlist)
+        .then(function (data) {
+          $rootScope.$broadcast('playlistAdded', playlist);
+          $scope.playlistData.title = '';
+          $scope.closeAddDialog();
+        });
 
-      $scope.playlistData.title = '';
-      $scope.closeAddDialog();
     };
+
   })
+
 
   // ! >>  Play List Controller >>----------------------------->
 
-  .controller('PlaylistsCtrl', function ($scope, $ionicModal, Persistence, $q) {
+  .controller('PlaylistsCtrl', function ($scope, $rootScope, $ionicModal, $q, Persistence) {
     $scope.ctrls = {del: false, reorder: false};
     $scope.playlists = [];
 
+    var _cl = function (cl, is, action) {
+      is = is || true;
+      if (is) cl(action);
+    };
+
     var getPlaylists = function () {
+      _cl(function (a) {console[a]('start getPL')}, true,'log');
       var deferred = $q.defer();
-      
       Persistence.getAllPlaylists().then(function (response) {
         $scope.playlists.length = 0;
         for (var i = 0; i < response.length; i++) {
@@ -132,7 +143,7 @@ angular.module('starter.controllers', [])
     // Perform the edit playlist action when the user submits the edit playlist form
     $scope.doEditDialog = function () {
 
-      var playlist = new Persistence.Entities.Playlist({title: $scope.playlistData.title});
+      var playlist = new Persistence.Entities.Playlist({title: $scope.playlist.title});
       Persistence.flush();
       $scope.$broadcast('playlistEdited', playlist);
 
@@ -165,7 +176,7 @@ angular.module('starter.controllers', [])
       ;
     };
 
-    $scope.$on('playlistAdded', function (event, playlist) {
+    $rootScope.$on('playlistAdded', function (event, playlist) {
       getPlaylists();
     });
     $scope.$on('playlistEdited', function (event, playlist) {

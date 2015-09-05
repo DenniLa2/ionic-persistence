@@ -19,12 +19,16 @@ angular.module('starter.services', [])
       Entities: entities,
 
       add: function (playlist) {
+        var deferred = $q.defer();
+        
         entities.Playlist.all().count(null, function (cnt) {
           console.log('pl count = ' + cnt);
           playlist.order = cnt;
           persistence.add(playlist);
-          persistence.flush();
+          persistence.flush(function () {deferred.resolve({state: 'ok'});});
         });
+
+        return deferred.promise;
       },
       remove: function (playlist) {
         var deferred = $q.defer();
